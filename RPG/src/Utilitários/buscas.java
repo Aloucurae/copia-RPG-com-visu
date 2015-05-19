@@ -6,6 +6,7 @@
 package Utilitários;
 
 import Tabelas.Jogadores;
+import Tabelas.Personagens;
 import conexao.conexao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,6 +28,7 @@ public class buscas {
         this.conecta = conexao.getConexao();
 
     }
+
     // busca jogador apartir do nome para login
     public List<Jogadores> buscaJogador(String nomJog) throws SQLException {
 
@@ -55,15 +57,19 @@ public class buscas {
         }
         return lista;
     }
-    //buscaPersonagem
-    
-     public List<Jogadores> buscaPersonagens(String codJog) throws SQLException {
+    //buscaPersonagens apartid do codigo do jogador
 
-        String sql = "SELECT * FROM Jogadores where nome_jogador like ? ";
-        List<Jogadores> lista;
+    public List<Personagens> buscaPersonagens(int codJog) throws SQLException {
+
+        String sql = "SELECT *"
+                + "  FROM Jogadores_personagens jogper"
+                + "     , personagens per"
+                + " WHERE jogper.codigo_jogador = ? "
+                + "   AND per.codigo_personagem = jogper.codigo_personagem";
+        List<Personagens> lista;
 
         PreparedStatement stmt = this.conecta.prepareStatement(sql);
-        stmt.setString(1, codJog);
+        stmt.setInt(1, codJog);
         ResultSet RS = stmt.executeQuery();
         {
 
@@ -71,19 +77,16 @@ public class buscas {
 
             while (RS.next()) {
 
-                Jogadores jog = new Jogadores();
+                Personagens per = new Personagens();
 
-                jog.setCodigo_jogador(RS.getInt("codigo_jogador"));
-                jog.setNome_jogador(RS.getString("nome_jogador"));
-                jog.setSenha_jogador(RS.getString("senha_jogador"));
-                jog.setMestre_jogador(RS.getBoolean("mestre_jogador"));
+                per.setCodigo_personagem(RS.getInt("codigo_personagem"));
+                per.setNome_personagem(RS.getString("nome_personagem"));
 
-                lista.add(jog);
+                lista.add(per);
 
             }
         }
         return lista;
     }
-    
-    
+
 }

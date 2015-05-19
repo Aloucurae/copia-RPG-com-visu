@@ -53,13 +53,13 @@ public class formprincipal extends javax.swing.JFrame {
         label2 = new java.awt.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextField1KeyPressed(evt);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
             }
         });
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
@@ -71,6 +71,7 @@ public class formprincipal extends javax.swing.JFrame {
             }
         });
 
+        jTextArea2.setEditable(false);
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
         jScrollPane2.setViewportView(jTextArea2);
@@ -79,6 +80,7 @@ public class formprincipal extends javax.swing.JFrame {
 
         jButton3.setText("Itens");
 
+        jTextArea3.setEditable(false);
         jTextArea3.setColumns(20);
         jTextArea3.setRows(5);
         jScrollPane3.setViewportView(jTextArea3);
@@ -171,12 +173,10 @@ public class formprincipal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
-
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            jButton1.doClick();
-        }
-    }//GEN-LAST:event_jTextField1KeyPressed
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        // TODO add your handling code here:
+     
+    }//GEN-LAST:event_formComponentShown
 
     /**
      * @param args the command line arguments
@@ -234,7 +234,7 @@ public class formprincipal extends javax.swing.JFrame {
         buscas bsk = new buscas();
 
         if (aux[0].equalsIgnoreCase("login")) {
-            if (bsk.buscaJogador(aux[1]).get(0).getCodigo_jogador() > 0) {
+            if (bsk.buscaJogador(aux[1]).size() > 0) {
                 res = "digite a senha - EX: senha Minhasenha";
                 nomeJogador = aux[1];
                 codigoJogador = bsk.buscaJogador(aux[1]).get(0).getCodigo_jogador();
@@ -242,6 +242,8 @@ public class formprincipal extends javax.swing.JFrame {
                 res = "Login invalido tente novamente - EX: login Usuario ";
             }
 
+        } else if (aux[0].equalsIgnoreCase("cls")) {
+            jTextArea1.setText(" sadas ");
         } else {
 
             if (codigoJogador == 0) {
@@ -252,8 +254,10 @@ public class formprincipal extends javax.swing.JFrame {
 
                     if (bsk.buscaJogador(nomeJogador).get(0).getSenha_jogador().equals(aux[1])) {
 
-                        res = "vc esta logado O/"+'\n';
-                        //buscaPersonagem(codigoJogador);    
+                        res = "vc esta logado O/" + '\n';
+                        res = res + listaPersonagens();
+
+                        label1.setText("logado como jogador: " + nomeJogador);
                     } else {
                         res = "senha invalida tente novamente - EX: senha Minhasenha";
                     }
@@ -270,4 +274,22 @@ public class formprincipal extends javax.swing.JFrame {
 
     }
 
+    public String listaPersonagens() throws SQLException {
+        buscas bsk = new buscas();
+        String res = "";
+
+        if (bsk.buscaPersonagens(codigoJogador).size() > 0) {
+            res = "------ Personagens ------" + '\n'; //+'\n';
+            for (int i = 0; i < bsk.buscaPersonagens(codigoJogador).size(); i++) {
+                res = res + bsk.buscaPersonagens(codigoJogador).get(i).getCodigo_personagem() + " - ";
+                res = res + bsk.buscaPersonagens(codigoJogador).get(i).getNome_personagem() + "" + '\n';
+            }
+
+        } else {
+            res = "nenhum personagem digite criar personagem para criar um" + '\n';
+        }
+
+        return res;
+
+    }
 }
