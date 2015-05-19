@@ -5,7 +5,11 @@
  */
 package interfaceGrafica;
 
+import Utilitários.buscas;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -50,7 +54,6 @@ public class formprincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextField1.setText("jTextField1");
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextField1KeyPressed(evt);
@@ -109,21 +112,21 @@ public class formprincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jTextField1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1)))
+                                .addComponent(jButton1))
+                            .addComponent(jScrollPane1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -132,12 +135,12 @@ public class formprincipal extends javax.swing.JFrame {
                 .addGap(7, 7, 7)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -155,12 +158,21 @@ public class formprincipal extends javax.swing.JFrame {
         String string = jTextField1.getText();
         String[] comands = string.split(" ");
 
-        jTextArea1.setText(comands[0]);
+        //  verificaComando(comands);
+        jTextArea1.setText(jTextArea1.getText() + "VC: " + string + '\n');
+        try {
+            jTextArea1.setText(jTextArea1.getText() + "Mestre: " + verificaComando(comands) + '\n');
+        } catch (SQLException ex) {
+            Logger.getLogger(formprincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        jTextField1.setText("");
+
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
-        // TODO add your handling code here:
+
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             jButton1.doClick();
         }
@@ -217,23 +229,44 @@ public class formprincipal extends javax.swing.JFrame {
     private java.awt.Label label2;
     // End of variables declaration//GEN-END:variables
 
-    public String verificaComando(String[] aux) {
+    public String verificaComando(String[] aux) throws SQLException {
         String res = " ";
+        buscas bsk = new buscas();
 
         if (aux[0].equalsIgnoreCase("login")) {
-            
+            if (bsk.buscaJogador(aux[1]).get(0).getCodigo_jogador() > 0) {
+                res = "digite a senha - EX: senha Minhasenha";
+                nomeJogador = aux[1];
+                codigoJogador = bsk.buscaJogador(aux[1]).get(0).getCodigo_jogador();
+            } else {
+                res = "Login invalido tente novamente - EX: login Usuario ";
+            }
+
         } else {
 
             if (codigoJogador == 0) {
                 res = "Faça o login - EX: login Usuario";
 
             } else {
-                res = "digite a senha - EX: senha Minhasenha";
+                if (aux[0].equalsIgnoreCase("senha")) {
+
+                    if (bsk.buscaJogador(nomeJogador).get(0).getSenha_jogador().equals(aux[1])) {
+
+                        res = "vc esta logado O/"+'\n';
+                        //buscaPersonagem(codigoJogador);    
+                    } else {
+                        res = "senha invalida tente novamente - EX: senha Minhasenha";
+                    }
+
+                } else {
+
+                }
+
             }
 
         }
 
-        return null;
+        return res;
 
     }
 

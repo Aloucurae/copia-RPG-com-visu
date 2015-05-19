@@ -14,8 +14,8 @@ import java.sql.SQLException;
  * @author Alexjonas
  */
 public class conexao {
-    
-     public static Connection getConexao() throws SQLException {
+
+    public static Connection getConexao() throws SQLException {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -24,5 +24,5 @@ public class conexao {
             throw new SQLException(e.getMessage());
         }
     }
-    
+
 }
