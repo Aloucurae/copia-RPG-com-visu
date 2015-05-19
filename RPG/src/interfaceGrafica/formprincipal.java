@@ -5,11 +5,18 @@
  */
 package interfaceGrafica;
 
+import java.awt.event.KeyEvent;
+
 /**
  *
  * @author Alexjonas
  */
 public class formprincipal extends javax.swing.JFrame {
+
+    String nomeJogador;
+    String nomePersonagem;
+    int codigoJogador = 0;
+    int codigoPersonagem = 0;
 
     /**
      * Creates new form formprincipal
@@ -44,6 +51,11 @@ public class formprincipal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTextField1.setText("jTextField1");
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField1KeyPressed(evt);
+            }
+        });
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -140,7 +152,19 @@ public class formprincipal extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String string = jTextField1.getText();
+        String[] comands = string.split(" ");
+
+        jTextArea1.setText(comands[0]);
+
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            jButton1.doClick();
+        }
+    }//GEN-LAST:event_jTextField1KeyPressed
 
     /**
      * @param args the command line arguments
@@ -192,4 +216,25 @@ public class formprincipal extends javax.swing.JFrame {
     private java.awt.Label label1;
     private java.awt.Label label2;
     // End of variables declaration//GEN-END:variables
+
+    public String verificaComando(String[] aux) {
+        String res = " ";
+
+        if (aux[0].equalsIgnoreCase("login")) {
+            
+        } else {
+
+            if (codigoJogador == 0) {
+                res = "Faça o login - EX: login Usuario";
+
+            } else {
+                res = "digite a senha - EX: senha Minhasenha";
+            }
+
+        }
+
+        return null;
+
+    }
+
 }
