@@ -59,6 +59,12 @@ public class formprincipal extends javax.swing.JFrame {
             }
         });
 
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField1KeyPressed(evt);
+            }
+        });
+
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -144,11 +150,12 @@ public class formprincipal extends javax.swing.JFrame {
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jTextField1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField1)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1)
+                        .addComponent(jButton2)
+                        .addComponent(jButton3)))
                 .addContainerGap())
         );
 
@@ -175,8 +182,16 @@ public class formprincipal extends javax.swing.JFrame {
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
         // TODO add your handling code here:
-     
+
     }//GEN-LAST:event_formComponentShown
+
+    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            jButton1.doClick();
+
+        }
+    }//GEN-LAST:event_jTextField1KeyPressed
 
     /**
      * @param args the command line arguments
@@ -266,6 +281,14 @@ public class formprincipal extends javax.swing.JFrame {
 
                 }
 
+                if (codigoPersonagem == 0) {
+
+                } else {
+                    if (aux[0].equalsIgnoreCase("personagem")) {
+                        //seleciona o personagem
+                    }
+                }
+
             }
 
         }
@@ -279,7 +302,7 @@ public class formprincipal extends javax.swing.JFrame {
         String res = "";
 
         if (bsk.buscaPersonagens(codigoJogador).size() > 0) {
-            res = "------ Personagens ------" + '\n'; //+'\n';
+            res = '\n' + "------ Personagens ------" + '\n'; //+'\n';
             for (int i = 0; i < bsk.buscaPersonagens(codigoJogador).size(); i++) {
                 res = res + bsk.buscaPersonagens(codigoJogador).get(i).getCodigo_personagem() + " - ";
                 res = res + bsk.buscaPersonagens(codigoJogador).get(i).getNome_personagem() + "" + '\n';
